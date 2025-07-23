@@ -1,0 +1,18 @@
+name: Trigger Daily Task in Private Repo
+
+on:
+  schedule:
+    - cron: '30 0 * * *'  # 每天 08:30（北京时间）
+  workflow_dispatch:       # 可手动触发
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger nikon-daily-task
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.TRIGGER_PAT }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/LeoonLiang/nikon-daily-task/actions/workflows/daily.yml/dispatches \
+            -d '{"ref":"main"}'
